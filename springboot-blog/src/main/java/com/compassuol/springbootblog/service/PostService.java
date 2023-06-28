@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +45,24 @@ public class PostService {
                 .map(this::convertToDto)
                 .orElseThrow( ()-> new ResourceNotFoundException("Post","id",id));
     }
+
+
+
+    public PostDto updatePost(long id,PostDto postDto) {
+
+        var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id",id));
+
+        post.setTitle(postDto.getTitle());;
+        post.setDescription(postDto.getDescription());
+        post.setContent(postDto.getContent());
+        var newPost = postRepository.save(post);
+        return convertToDto(newPost);
+    }
+
+    public void deletePost(long id){
+        postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id",id));
+        postRepository.deleteById(id);
+    }
     private PostDto convertToDto(Post post){
         var postDto = new PostDto();
         postDto.setId(post.getId());
@@ -52,6 +71,4 @@ public class PostService {
         postDto.setContent(post.getContent());
         return postDto;
     }
-
-
 }
