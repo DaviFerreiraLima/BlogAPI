@@ -30,10 +30,7 @@ public class PostService {
 
         Post newPost = postRepository.save(post);
 
-        PostDto response = new PostDto();
-        response.setContent(newPost.getContent());
-        response.setDescription(newPost.getDescription());
-        response.setTitle(newPost.getTitle());
+        PostDto response = convertToDto(newPost);
 
         return response;
     }
@@ -44,7 +41,6 @@ public class PostService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
 
     private PostDto convertToDto(Post post){
         var postDto = new PostDto();
