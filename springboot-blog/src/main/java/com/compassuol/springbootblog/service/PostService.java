@@ -6,6 +6,10 @@ import com.compassuol.springbootblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostService {
 
@@ -32,5 +36,21 @@ public class PostService {
         response.setTitle(newPost.getTitle());
 
         return response;
+    }
+
+    public List<PostDto> getAllPosts(){
+        return postRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    private PostDto convertToDto(Post post){
+        var postDto = new PostDto();
+        postDto.setTitle(post.getTitle());
+        postDto.setDescription(post.getDescription());
+        postDto.setContent(post.getContent());
+        return postDto;
     }
 }
