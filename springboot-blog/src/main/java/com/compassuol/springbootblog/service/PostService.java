@@ -1,6 +1,7 @@
 package com.compassuol.springbootblog.service;
 
 import com.compassuol.springbootblog.entity.Post;
+import com.compassuol.springbootblog.exception.ResourceNotFoundException;
 import com.compassuol.springbootblog.payload.PostDto;
 import com.compassuol.springbootblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,11 @@ public class PostService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
+    public PostDto getPostById(long id){
+        return postRepository.findById(id)
+                .map(this::convertToDto)
+                .orElseThrow( ()-> new ResourceNotFoundException("Post","id",id));
+    }
     private PostDto convertToDto(Post post){
         var postDto = new PostDto();
         postDto.setId(post.getId());
@@ -47,4 +52,6 @@ public class PostService {
         postDto.setContent(post.getContent());
         return postDto;
     }
+
+
 }
