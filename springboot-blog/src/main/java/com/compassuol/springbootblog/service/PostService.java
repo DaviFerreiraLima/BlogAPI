@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
 
-
     private PostRepository postRepository;
 
     @Autowired
@@ -30,9 +29,7 @@ public class PostService {
 
         Post newPost = postRepository.save(post);
 
-        PostDto response = convertToDto(newPost);
-
-        return response;
+        return convertToDto(newPost);
     }
 
     public List<PostDto> getAllPosts(){
@@ -44,6 +41,7 @@ public class PostService {
 
     private PostDto convertToDto(Post post){
         var postDto = new PostDto();
+        postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
         postDto.setDescription(post.getDescription());
         postDto.setContent(post.getContent());
