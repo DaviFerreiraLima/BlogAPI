@@ -1,6 +1,7 @@
 package com.compassuol.springbootblog.controller;
 
 import com.compassuol.springbootblog.payload.PostDto;
+import com.compassuol.springbootblog.payload.PostResponse;
 import com.compassuol.springbootblog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDto>> getAllPosts(
+    public ResponseEntity<PostResponse> getAllPosts(
             @RequestParam(value = "pageNo",defaultValue = "0",required = false) int pageNo,
             @RequestParam(value = "pageSize",defaultValue = "10", required = false) int pageSize
     ){

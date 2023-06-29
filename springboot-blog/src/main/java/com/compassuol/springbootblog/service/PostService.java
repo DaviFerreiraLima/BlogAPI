@@ -3,6 +3,7 @@ package com.compassuol.springbootblog.service;
 import com.compassuol.springbootblog.entity.Post;
 import com.compassuol.springbootblog.exception.ResourceNotFoundException;
 import com.compassuol.springbootblog.payload.PostDto;
+import com.compassuol.springbootblog.payload.PostResponse;
 import com.compassuol.springbootblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,15 +38,14 @@ public class PostService {
         return convertToDto(newPost);
     }
 
-    public List<PostDto> getAllPosts(int pageNo,int pageSize){
+    public PostResponse getAllPosts(int pageNo,int pageSize){
 
         var pageable = PageRequest.of(pageNo,pageSize);
         Page<Post> postPage = postRepository.findAll(pageable);
-        List<Post> postList = postPage.getContent();
-        return   postList
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        List<PostDto> content = postPage.stream().map(this::convertToDto).collect(Collectors.toList());
+
+        return new PostResponse(content,postPage.getNumber(),postPage.getSize(),
+                postPage.getTotalElements(),postPage.getTotalPages(),postPage.isLast());
     }
     public PostDto getPostById(long id){
         return postRepository.findById(id)
