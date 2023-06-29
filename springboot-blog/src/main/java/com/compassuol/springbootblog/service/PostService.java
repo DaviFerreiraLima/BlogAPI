@@ -5,8 +5,11 @@ import com.compassuol.springbootblog.exception.ResourceNotFoundException;
 import com.compassuol.springbootblog.payload.PostDto;
 import com.compassuol.springbootblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +37,12 @@ public class PostService {
         return convertToDto(newPost);
     }
 
-    public List<PostDto> getAllPosts(){
-        return postRepository.findAll()
+    public List<PostDto> getAllPosts(int pageNo,int pageSize){
+
+        var pageable = PageRequest.of(pageNo,pageSize);
+        Page<Post> postPage = postRepository.findAll(pageable);
+        List<Post> postList = postPage.getContent();
+        return   postList
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
