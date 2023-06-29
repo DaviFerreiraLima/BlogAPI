@@ -39,9 +39,11 @@ public class PostService {
         return convertToDto(newPost);
     }
 
-    public PostResponse getAllPosts(int pageNo,int pageSize,String sortBy){
+    public PostResponse getAllPosts(int pageNo,int pageSize,String sortBy, String sortDir){
 
-        var pageable = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+        var pageable = PageRequest.of(pageNo,pageSize,
+                Sort.by(Sort.Direction.fromString(sortDir.toLowerCase()),
+                        sortBy));
 
         Page<Post> postPage = postRepository.findAll(pageable);
         List<PostDto> content = postPage.stream().map(this::convertToDto).collect(Collectors.toList());
