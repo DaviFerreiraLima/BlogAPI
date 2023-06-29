@@ -5,6 +5,7 @@ import com.compassuol.springbootblog.exception.ResourceNotFoundException;
 import com.compassuol.springbootblog.payload.PostDto;
 import com.compassuol.springbootblog.payload.PostResponse;
 import com.compassuol.springbootblog.repository.PostRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,23 +21,22 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
 
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
+
+    private final ModelMapper mapper;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, ModelMapper mapper) {
         this.postRepository = postRepository;
+        this.mapper =mapper;
     }
 
     public PostDto createPost(PostDto postDto){
+       var post = mapper.map(postDto,Post.class);
 
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+       var newPost = postRepository.save(post);
 
-        Post newPost = postRepository.save(post);
-
-        return convertToDto(newPost);
+       return mapper.map(newPost,PostDto.class);
     }
 
     public PostResponse getAllPosts(int pageNo,int pageSize,String sortBy, String sortDir){
@@ -46,40 +46,35 @@ public class PostService {
                         sortBy));
 
         Page<Post> postPage = postRepository.findAll(pageable);
-        List<PostDto> content = postPage.stream().map(this::convertToDto).collect(Collectors.toList());
-
+        List<PostDto> content = postPage.stream().map(post -> mapper.map(post,PostDto.class))
+                .collect(Collectors.toList());
         return new PostResponse(content,postPage.getNumber(),postPage.getSize(),
                 postPage.getTotalElements(),postPage.getTotalPages(),postPage.isLast());
     }
     public PostDto getPostById(long id){
         return postRepository.findById(id)
-                .map(this::convertToDto)
+                .map(post -> mapper.map(post,PostDto.class))
                 .orElseThrow( ()-> new ResourceNotFoundException("Post","id",id));
     }
 
 
 
     public PostDto updatePost(long id,PostDto postDto) {
-
-        var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id",id));
+        var post = postRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Post","id",id));
 
         post.setTitle(postDto.getTitle());;
         post.setDescription(postDto.getDescription());
         post.setContent(postDto.getContent());
+
         var newPost = postRepository.save(post);
-        return convertToDto(newPost);
+
+        return mapper.map(newPost,PostDto.class);
     }
 
     public void deletePost(long id){
         postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id",id));
         postRepository.deleteById(id);
     }
-    private PostDto convertToDto(Post post){
-        var postDto = new PostDto();
-        postDto.setId(post.getId());
-        postDto.setTitle(post.getTitle());
-        postDto.setDescription(post.getDescription());
-        postDto.setContent(post.getContent());
-        return postDto;
-    }
+
 }
