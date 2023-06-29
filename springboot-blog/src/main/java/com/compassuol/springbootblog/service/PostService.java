@@ -8,6 +8,7 @@ import com.compassuol.springbootblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
@@ -38,9 +39,10 @@ public class PostService {
         return convertToDto(newPost);
     }
 
-    public PostResponse getAllPosts(int pageNo,int pageSize){
+    public PostResponse getAllPosts(int pageNo,int pageSize,String sortBy){
 
-        var pageable = PageRequest.of(pageNo,pageSize);
+        var pageable = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+
         Page<Post> postPage = postRepository.findAll(pageable);
         List<PostDto> content = postPage.stream().map(this::convertToDto).collect(Collectors.toList());
 
