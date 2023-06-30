@@ -1,7 +1,8 @@
 package com.compassuol.springbootblog.entity;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -20,13 +21,15 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Nonnull
+    @NotEmpty
+    @Size(min = 2, message = "Post title shoud have at least 2 characters")
     private String title;
 
-    @Nonnull
+    @NotEmpty
+    @Size(min = 10, message = "Post description shoud have at least 10 characters")
     private String description;
 
-    @Nonnull
+    @NotEmpty
     private String content;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)

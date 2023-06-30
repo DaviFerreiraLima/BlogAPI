@@ -4,6 +4,7 @@ import com.compassuol.springbootblog.payload.PostDto;
 import com.compassuol.springbootblog.payload.PostResponse;
 import com.compassuol.springbootblog.service.PostService;
 import com.compassuol.springbootblog.utils.AppConstants;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> createPost( @RequestBody @Valid PostDto postDto){
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
@@ -43,7 +44,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable long id){
+    public ResponseEntity<PostDto> updatePost(@RequestBody @Valid PostDto postDto, @PathVariable long id){
         return new ResponseEntity<PostDto>(postService.updatePost(id,postDto),HttpStatus.OK);
     }
 
