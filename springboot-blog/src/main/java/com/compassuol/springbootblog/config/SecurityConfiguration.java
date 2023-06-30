@@ -37,7 +37,8 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                                .anyRequest().authenticated()
+                                 .requestMatchers("/api/auth/**").permitAll()
+                                 .anyRequest().authenticated()
 
                 ).httpBasic(Customizer.withDefaults());
         return http.build();
