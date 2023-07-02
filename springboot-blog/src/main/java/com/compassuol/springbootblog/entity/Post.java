@@ -22,7 +22,7 @@ public class Post {
     private Long id;
 
     @NotEmpty
-    @Size(min = 2, message = "Post title shoud have at least 2 characters")
+    @Size(min = 2, message = "Post title should have at least 2 characters")
     private String title;
 
     @NotEmpty
