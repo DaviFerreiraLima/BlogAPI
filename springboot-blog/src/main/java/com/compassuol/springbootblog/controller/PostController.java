@@ -2,6 +2,7 @@ package com.compassuol.springbootblog.controller;
 
 import com.compassuol.springbootblog.payload.PostDto;
 import com.compassuol.springbootblog.payload.PostResponse;
+import com.compassuol.springbootblog.repository.CategoryRepository;
 import com.compassuol.springbootblog.service.PostService;
 import com.compassuol.springbootblog.utils.AppConstants;
 import jakarta.validation.Valid;
@@ -16,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
-
     private PostService postService;
 
     @Autowired
@@ -53,8 +53,12 @@ public class PostController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> updatePost(@PathVariable long id){
+    public ResponseEntity<String> deletePost(@PathVariable long id){
         postService.deletePost(id);
         return new ResponseEntity<>("Post deleted Successfully",HttpStatus.OK);
+    }
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<PostDto>> getPostsByCategoryId(@PathVariable("id") long categoryId){
+        return new ResponseEntity<>(postService.getPostsByCategoryId(categoryId),HttpStatus.OK);
     }
 }
