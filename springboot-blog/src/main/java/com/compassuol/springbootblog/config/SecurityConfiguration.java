@@ -50,7 +50,7 @@ public class SecurityConfiguration {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                        authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                                  .requestMatchers("/api/auth/**").permitAll()
                                  .anyRequest().authenticated()
 
