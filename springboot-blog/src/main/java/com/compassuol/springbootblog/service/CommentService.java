@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Autowired
     public CommentService(CommentRepository commentRepository,PostRepository postRepository,ModelMapper modelMapper) {

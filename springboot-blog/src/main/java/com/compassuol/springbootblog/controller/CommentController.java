@@ -2,6 +2,7 @@ package com.compassuol.springbootblog.controller;
 
 import com.compassuol.springbootblog.payload.CommentDto;
 import com.compassuol.springbootblog.service.CommentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
+@Tag(
+        name = "CRUD REST API'S for Comment Resource"
+)
 public class CommentController {
 
-    private CommentService commentService;
+    private final CommentService commentService;
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
@@ -47,6 +51,6 @@ public class CommentController {
     @DeleteMapping ("/posts/{postId}/comments/{id}")
     public ResponseEntity<String> deleteCommentById(@PathVariable long postId,@PathVariable long id){
         commentService.deleteComment(postId,id);
-        return new ResponseEntity<String>("Comment deleted successfully!",HttpStatus.OK);
+        return new ResponseEntity<>("Comment deleted successfully!",HttpStatus.OK);
     }
 }

@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private ModelMapper mapper;
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper mapper;
 
     public CategoryService(CategoryRepository categoryRepository, ModelMapper mapper) {
         this.categoryRepository = categoryRepository;
